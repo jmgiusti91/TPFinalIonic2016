@@ -1,0 +1,57 @@
+<ion-view view-title="Detalle Desafio">
+  <ion-content ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+    <div class="list">
+      <!--<label class="item item-input">
+      	<h3>Descripcion</h3><br>
+        <textarea name="descripcion" id="descripcion" ng-model="desafio.descripcion" cols="50" rows="5" readonly></textarea>
+      </label>
+      
+      <label class="item item-input">
+        Creditos: <input type="number" ng-model="desafio.creditos" readonly>
+      </label>
+      <label class="item item-input">
+        Fecha Creacion: <input type="text" ng-model="desafio.fechaCreacion" readonly>
+      </label>
+      <label class="item item-input">
+        Fecha Expiracion: <input type="text" ng-model="desafio.fechaExpiracion" readonly>
+      </label>
+      <label class="item item-input">
+        Instancia del desafio: <input type="text" ng-model="desafio.instancia" readonly>
+      </label>
+      <label class="item item-input">
+        Creador: <input type="text" ng-model="desafio.nombreUsuario" readonly>
+      </label>
+      <button class="button button-block button-balanced" ng-click="AceptarDesafio()">Aceptar Desafio</button>
+    </div>-->
+
+    <div class="item card-item">
+        <div class="card stable-bg ink ink-dark">
+            <div class="item item-avatar item-text-wrap">
+                <span class="avatar" style="background-image: url({{desafio.imgUser}});"></span>
+                <strong>{{desafio.nombreUsuario}}</strong>
+                <label class="item item-input item-floating-label">
+                  <span class="input-label">Descripcion</span>
+                  <input type="text" placeholder="Descripcion" ng-model="desafio.descripcion" readonly>
+                </label>
+                <label class="item item-input item-floating-label">
+                  <span class="input-label">Fecha de Creacion</span>
+                  <input type="text" placeholder="Fecha de Creacion" ng-model="desafio.fechaCreacion" readonly>
+                </label>
+                <label class="item item-input item-floating-label">
+                  <span class="input-label">Fecha de Expiracion</span>
+                  <input type="text" placeholder="Fecha de Expiracion" ng-model="desafio.fechaExpiracion" readonly>
+                </label>
+                <label class="item item-input item-floating-label">
+                  <span class="input-label">Instancia</span>
+                  <input type="text" placeholder="Instancia" ng-model="desafio.instancia" readonly>
+                </label>
+                <label class="item item-input item-floating-label">
+                  <span class="input-label">Creditos</span>
+                  <input type="number" placeholder="Creditos" ng-model="desafio.creditos" readonly>
+                </label>
+                <button class="button button-block button-balanced" ng-click="AceptarDesafio()">Aceptar Desafio</button>
+            </div>
+        </div>
+    </div>
+  </ion-content>
+</ion-view>

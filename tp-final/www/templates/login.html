@@ -1,0 +1,22 @@
+<ion-view view-title="Login" hide-nav-bar="true">
+  <ion-content style="background: url(img/background-login.jpg) center; background-size: cover;">
+  <div class="hero no-header flat">
+    <div class="content">
+    </div>
+  </div>
+    <form>
+      <div class="list">
+          <ion-md-input placeholder="Username" highlight-color="balanced" type="text" ng-model="loginData.username" ng-disabled="!habilitado"></ion-md-input>
+          <ion-md-input placeholder="Password" highlight-color="energized" type="password" ng-model="loginData.password" ng-disabled="!habilitado"></ion-md-input>
+      </div>
+      <div class="padding">
+        <button class="button button-full button-assertive ink" type="button" ng-click="Loguear()" ng-show="habilitado">Login</button>
+        <center><ion-spinner icon="android" ng-show="!habilitado"></ion-spinner></center>
+      </div>
+    </form>
+    <div class="button-bar social-login">
+        <button class="button button-small button-border icon-left ion-checkmark-round button-balanced-900" ng-click="Registrar()" ng-disabled="!habilitado">Registrarse</button>
+        <button class="button button-small button-border icon-left ion-help-circled button-dark" ng-click="Olvide()" ng-disabled="!habilitado">Olvide Password</button>
+    </div>
+  </ion-content>
+</ion-view>

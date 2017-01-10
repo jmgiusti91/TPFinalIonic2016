@@ -1,0 +1,43 @@
+<ion-view view-title="Desafios">
+  <ion-content ng-class="{expanded:isExpanded}">
+	<!--<table cellpadding="0" cellspacing="0" border="0">
+		<thead>
+		    <tr>
+		      <th>Creditos</th>
+		      <th>Descripcion</th>
+		      <th>Nombre de Usuario</th>
+		      <th>Instancia</th>
+		      <th>Detalle</th>
+		    </tr>
+	  	</thead>
+		<tbody>
+			<tr ng-repeat="desafio in listadoDesafios">
+				<td>{{desafio.creditos}}</td>
+				<td>{{desafio.descripcion}}</td>
+				<td>{{desafio.nombreUsuario}}</td>
+				<td>{{desafio.instancia}}</td>
+				<td><button class='button button-positive' name='Detalle' ui-sref="app.detalle-desafio({Detalle: {{desafio}}})">Ver Detalle</button></td>
+			</tr>
+		</tbody>
+	</table>-->
+	<div ng-repeat="desafio in listadoDesafios" ng-last-repeat="mylist">
+		<div class="item card-item animate-fade-slide-in-right">
+            <div ui-sref="app.detalle-desafio({Detalle: {{desafio}}})" class="card stable-bg ink ink-dark">
+                <div class="item item-avatar item-text-wrap">
+                    <span class="avatar" style="background-image: url({{desafio.imgUser}});"></span>
+                    <strong>{{desafio.nombreUsuario}}:</strong>&nbsp;{{desafio.descripcion}}
+                    <div class="card-footer text-right">
+                        <i class="icon ion-cash balanced"></i> {{desafio.creditos}}
+                        <i class="icon ion-calendar assertive"></i> Expira: {{desafio.fechaExpiracion}} 
+                        <div class="pull-left">
+                            <div class="mdl-card__actions">
+    							<span class="demo-card-image__filename">{{desafio.instancia}}</span>
+  							</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+  </ion-content>
+</ion-view>
