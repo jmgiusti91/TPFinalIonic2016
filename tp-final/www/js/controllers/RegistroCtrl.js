@@ -8,16 +8,16 @@ angular.module('app.controllers')
       console.info("error", error);
     }).then(function (respuesta){
       console.info("respuesta", respuesta);
-      User.login(respuesta.uid, respuesta.email, 1000, "img/unknown.jpg", "img/background-login-min.jpg", $scope.registerData.username, false);
-      SrvFirebase.RefUsuarios().push({
+    User.login(respuesta.uid, respuesta.email, 1000, "img/unknown.jpg", "img/background-login-min.jpg", $scope.registerData.username, false);
+    SrvFirebase.RefUsuarios().child(respuesta.uid).set({
 		uid: User.getUid(),
 		nombre: User.getNombre(),
-		email: User.getNombre(),
+		email: User.getEmail(),
 		creditos: User.getCreditos(),
 		foto: User.getFoto(),
 		fotoPortada: User.getFotoPortada(),
 		soyAdmin: User.isAdmin()      	
-      })
+    })
       $state.go('app.home');
     })
   }

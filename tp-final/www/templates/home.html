@@ -18,8 +18,8 @@
                 <i class="icon ion-images"></i> Photos
             </a>
         </div>
-        <h4 class="content padding double-padding-x">Following</h4>
-        <div class="list animate-fade-slide-in-right">
+        <h4 class="content padding double-padding-x" ng-hide="admin">Following</h4>
+        <div class="list animate-fade-slide-in-right" ng-hide="admin">
             <a ui-sref="#" class="item item-avatar item-icon-right">
                 <h2>Jon Snow</h2>
                 <p>Da illest illegitimate</p>
@@ -35,6 +35,10 @@
                 <p>B.A.M.F. imp</p>
                 <i class="icon ion-chatbubble muted"></i>
             </a>
+        </div>
+        <h4 class="content padding double-padding-x" ng-show="admin">Notificar Desafios Actualizados</h4>
+        <div class="list animate-fade-slide-in-right" ng-show="admin">
+            <button class="button button-block button-assertive" ng-click="PushNotification()">Enviar Notificacion</button>
         </div>
     </ion-content>
 </ion-view>

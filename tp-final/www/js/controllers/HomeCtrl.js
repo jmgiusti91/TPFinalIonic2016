@@ -1,6 +1,6 @@
 angular.module('app.controllers')
 
-.controller('HomeCtrl', function($scope, $ionicSideMenuDelegate, $timeout, $ionicHistory, User, SrvFirebase, ionicMaterialMotion, ionicMaterialInk){
+.controller('HomeCtrl', function($scope, $rootScope, $ionicPush, $ionicSideMenuDelegate, $timeout, $ionicHistory, User, SrvFirebase, ionicMaterialMotion, ionicMaterialInk){
 
   /*COMIENZO ANIMACION*/
 
@@ -10,6 +10,7 @@ angular.module('app.controllers')
     $scope.usuario.fotoPerfil = User.getFoto();
     $scope.usuario.nombre = User.getNombre();
     $scope.usuario.email = User.getEmail();
+    $scope.admin = User.isAdmin();
 
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -33,5 +34,23 @@ angular.module('app.controllers')
     // Set Ink
     ionicMaterialInk.displayEffect();
   /*FIN ANIMACION*/
+
+  $scope.$on('$ionicView.enter', function(e) {
+
+    $scope.usuario.fotoPortada = User.getFotoPortada();
+    $scope.usuario.fotoPerfil = User.getFoto();
+    
+  });
+
+  $scope.PushNotification = function(){
+    console.log($rootScope.token);
+    SrvFirebase.EnviarNotificacion(); //En ionic push param $rootScope.token
+    alert("Notificacion Enviada");
+  }
+
+  /*$scope.$on('cloud:push:notification', function(event, data) {
+      var msg = data.message;
+      alert(msg.title + ': ' + msg.text);
+   });*/
 
 })

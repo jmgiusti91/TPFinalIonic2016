@@ -1,0 +1,29 @@
+<ion-view view-title="Perfil">
+    <ion-content ng-class="{expanded:$scope.isExpanded}">
+        <div class="hero slide-up" style="background-image: url({{usuario.fotoPortada}});">
+            <div class="content">
+                <div class="avatar" style="background-image: url({{usuario.fotoPerfil}});"></div>
+                <h3><a class="light">{{usuario.nombre}}</a></h3>
+                <h4>{{usuario.email}}</h4>
+            </div>
+        </div>
+        <div class="tabs tabs-dark tabs-icon-top static">
+        </div>
+        <h4 class="content padding double-padding-x">Foto Perfil.</h4>
+            <div class="list">
+                <button class="button button-block button-calm button-flat" data-ink-color="#CD3385" data-ink-opacity=".8" ng-click="ElegirFotoPerfil()">Elegir Foto del Perfil</button>
+            </div>
+            <div class="list">
+                <button class="button button-block button-energized button-flat" data-ink-color="#CD3385" data-ink-opacity=".8" ng-click="TomarFotoPerfil()">Tomar Foto del Perfil</button>
+            </div>
+            <div class="tabs tabs-dark tabs-icon-top static">
+            </div>
+            <h4 class="content padding double-padding-x">Foto Portada.</h4>
+            <div class="list">
+                <button class="button button-block button-calm button-flat" data-ink-color="#CD3385" data-ink-opacity=".8" ng-click="ElegirFotoPortada()">Elegir Foto de la Portada</button>
+            </div>
+            <div class="list">
+                <button class="button button-block button-energized button-flat" data-ink-color="#CD3385" data-ink-opacity=".8" ng-click="TomarFotoPortada()">Tomar Foto de la Portada</button>
+            </div>
+    </ion-content>
+</ion-view>

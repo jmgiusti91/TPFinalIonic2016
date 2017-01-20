@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'app.controllers', 'ngCordova', 'firebase', 'ionic.native', 'app.services', 'ionic-material', 'ionMdInput'])
+angular.module('app', ['ionic', 'ionic.cloud', 'app.controllers', 'ngCordova', 'firebase', 'ionic.native', 'app.services', 'ionic-material', 'ionMdInput'])
 
 .run(function($ionicPlatform, $rootScope) {
   $rootScope.desafio = {};
@@ -24,9 +24,27 @@ angular.module('app', ['ionic', 'app.controllers', 'ngCordova', 'firebase', 'ion
 
 })
 
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $ionicCloudProvider) {
 
 
+  $ionicCloudProvider.init({
+    "core": {
+      "app_id": "e6256981"
+    },
+    "push": {
+      "sender_id": "630205633611",
+      "pluginConfig": {
+        "ios": {
+          "badge": true,
+          "sound": true
+        },
+        "android": {
+          "iconColor": "#343434"
+        }
+      }
+    }
+  });
+  
   $ionicConfigProvider.views.maxCache(0);
   //var appID = 330666343961057;
   //var version = "v2.0"; // or leave blank and default is v2.0
@@ -75,15 +93,18 @@ angular.module('app', ['ionic', 'app.controllers', 'ngCordova', 'firebase', 'ion
         controller: 'DesafiosCtrl'
       },
       'fabContent': {
-                template: '<button id="nvo-desafio" class="button button-fab button-fab-top-right expanded button-energized-900 flap" ng-click="NuevoDesafio()"><i class="icon ion-plus"></i></button>',
+                template: '<button id="nvo-desafio" class="button button-fab button-fab-top-right expanded button-energized-900 flap" ng-click="NuevoDesafio()" ng-hide="admin"><i class="icon ion-plus"></i></button>',
                 controller: function ($timeout, $state, $scope) {
-                    $timeout(function () {
+                    $scope.admin = $scope.$parent.isAdmin;
+                    if (!$scope.admin) {
+                      $timeout(function () {
                         document.getElementById('nvo-desafio').classList.toggle('on');
                         $scope.NuevoDesafio = function(){
                           document.getElementById('nvo-desafio').classList.toggle('off');
                           $state.go('app.nvo-desafio');
                         }
-                    }, 200);
+                      }, 200);
+                    };
                 }
         }
     }
@@ -101,7 +122,7 @@ angular.module('app', ['ionic', 'app.controllers', 'ngCordova', 'firebase', 'ion
                     $timeout(function () {
                         document.getElementById('nvo-desafio-help').classList.toggle('on');
                         $scope.NuevoDesafioHelp = function(){
-                          var template =  '<ion-popover-view>' +
+                          var template =  '<ion-popover-view style="margin-top:60px">' +
                                           '   <ion-header-bar>' +
                                           '       <h1 class="title" style="color:#000">Ayuda</h1>' +
                                           '   </ion-header-bar>' +

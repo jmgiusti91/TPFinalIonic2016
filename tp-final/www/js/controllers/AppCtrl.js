@@ -1,6 +1,6 @@
 angular.module('app.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, $timeout, $state, $ionicHistory) {
+.controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, $timeout, $state, $ionicHistory, $rootScope, User) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -15,6 +15,11 @@ angular.module('app.controllers', [])
     $scope.isExpanded = false;
     $scope.hasHeaderFabLeft = false;
     $scope.hasHeaderFabRight = false;
+
+    $rootScope.imgUser = 'img/unknown.jpg';
+    $rootScope.nombreUser = "";
+    $scope.isLogin = false;
+    $scope.isAdmin = false;
 
     var navIcons = document.getElementsByClassName('ion-navicon');
     for (var i = 0; i < navIcons.length; i++) {
@@ -92,6 +97,14 @@ angular.module('app.controllers', [])
         }
     };
 
+    $scope.setLogin = function(bool){
+      $scope.isLogin = bool;
+    }
+
+    $scope.setAdmin = function(bool){
+      $scope.isAdmin = bool;
+    }
+
     /*Fin animacion*/
 
   firebase.auth().onAuthStateChanged(function(user) {
@@ -114,9 +127,13 @@ angular.module('app.controllers', [])
   });
 
   $scope.Desloguear = function(){
+    $rootScope.imgUser = 'img/unknown.jpg';
+    $rootScope.nombreUser = "";
+    User.clean();
+    $scope.setLogin(false);
     firebase.auth().signOut();
     $timeout(function(){
-      $scope.habilitado = true;
+    $scope.habilitado = true;
       /*$ionicHistory.nextViewOptions({
           disableBack: true
       });

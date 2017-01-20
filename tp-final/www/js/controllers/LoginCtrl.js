@@ -1,6 +1,6 @@
 angular.module('app.controllers')
 
-.controller('LoginCtrl', function($scope, $ionicHistory, $state, $timeout, $ionicSideMenuDelegate, $location, User, SrvFirebase){
+.controller('LoginCtrl', function($scope, $ionicHistory, $ionicPush, $state, $timeout, $ionicSideMenuDelegate, $location, User, SrvFirebase, $rootScope){
 
   // hide-nav-bar="true"
 
@@ -39,9 +39,26 @@ angular.module('app.controllers')
           //console.log(firebase.auth().currentUser);
 
           $timeout(function(){
+            /*var options = {
+              ignore_user: true
+            }
+            $ionicPush.register().then(function(t) {
+              return $ionicPush.saveToken(t, options);
+            }).then(function(t) {
+              console.log('Token saved:', t.token);
+              $rootScope.token = t.token;
+            });*/
+
             SrvFirebase.RefUsuario(userId).once('value').then(function(snapshot) {
               console.log(snapshot.val());
               User.login(snapshot.val().uid, snapshot.val().email, snapshot.val().creditos, snapshot.val().foto, snapshot.val().fotoPortada, snapshot.val().nombre, snapshot.val().soyAdmin);
+              console.log(User.getFullData());
+              $rootScope.imgUser = User.getFoto(); //Cambio foto y nombre que aparecen en el menu.
+              $rootScope.nombreUser = User.getNombre();
+              $scope.$parent.setLogin(true);
+              $scope.$parent.setAdmin(User.isAdmin());
+              //console.info("User.isAdmin ", User.isAdmin());
+              //console.log($scope.$parent.isAdmin);
               $state.go('app.home');
             }).catch(function (error){
 

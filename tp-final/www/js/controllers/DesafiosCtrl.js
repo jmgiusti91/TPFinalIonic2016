@@ -3,7 +3,7 @@ angular.module('app.controllers')
 .controller('DesafiosCtrl', function($scope, $state, $timeout, $rootScope, User, SrvFirebase, ionicMaterialMotion, ionicMaterialInk) {
 
 	/*COMIENZO ANIMACION*/
-	$scope.$parent.showHeader();
+	  $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
@@ -110,9 +110,9 @@ angular.module('app.controllers')
           $scope.desafios.instancia = "Expirado";
         };
 
-        if ($scope.desafios.instancia == "Aceptado") {
+        /*if ($scope.desafios.instancia == "Aceptado") {
           $scope.desafios.instancia = "Finalizado";
-        };
+        };*/
 
         var updates = {};
         updates['/instancia/'] = $scope.desafios.instancia;
@@ -125,14 +125,25 @@ angular.module('app.controllers')
         .once('value', function (snapshot){
           //console.log(snapshot.val());
           if (snapshot.val() != null) {
-            if (snapshot.val().instancia == "Generado" || snapshot.val().instancia == "Aceptado") {
-              SrvFirebase.RefUsuario(snapshot.val().uid).child("foto").once('value', function (snap){
-              	$scope.desafioDeListado = snapshot.val();
-              	$scope.desafioDeListado.imgUser = snap.val();
-              	$scope.listadoDesafios.push($scope.desafioDeListado); 
-              })
-            };
-            
+            if (!User.isAdmin()) {
+              if (snapshot.val().instancia == "Generado" || snapshot.val().instancia == "Aceptado") {
+                SrvFirebase.RefUsuario(snapshot.val().uid).child("foto").once('value', function (snap){
+                  $scope.desafioDeListado = snapshot.val();
+                  $scope.desafioDeListado.imgUser = snap.val();
+                  $scope.listadoDesafios.push($scope.desafioDeListado);
+                  console.log("Generado y Aceptado"); 
+                })
+              };
+            } else {
+              if (snapshot.val().instancia == "Aceptado") {
+                SrvFirebase.RefUsuario(snapshot.val().uid).child("foto").once('value', function (snap){
+                  $scope.desafioDeListado = snapshot.val();
+                  $scope.desafioDeListado.imgUser = snap.val();
+                  $scope.listadoDesafios.push($scope.desafioDeListado);
+                  console.log("Solo Aceptado"); 
+                })
+              };
+            }  
           };
         })
 

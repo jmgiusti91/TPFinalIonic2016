@@ -11,12 +11,11 @@ angular.module('app.controllers')
     if($scope.desafio.creditos <= parseInt(User.getCreditos())){
 
       User.setCreditos(parseInt(User.getCreditos()) - $scope.desafio.creditos);
-      SrvFirebase.RefUsuario(User.getUid()).set({
-        uid: User.getUid(),
-        email: User.getEmail(),
-        foto : User.getFoto(),
+      SrvFirebase.GastarCreditos($scope.desafio.creditos, User.getUid());
+      /*var updates = {
         creditos: User.getCreditos()
-      });
+      }
+      SrvFirebase.RefUsuario(User.getUid()).update(updates);*/
 
       $scope.desafio.queHago = "alta";
       $rootScope.desafio = $scope.desafio;
