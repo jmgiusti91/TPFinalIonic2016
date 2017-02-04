@@ -1,6 +1,6 @@
 angular.module('app.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, $timeout, $state, $ionicHistory, $rootScope, User) {
+.controller('AppCtrl', function($scope, $ionicModal, SrvFirebase, $ionicPopover, $ionicPopup, $ionicPush, $timeout, $state, $ionicHistory, $rootScope, User) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -20,6 +20,9 @@ angular.module('app.controllers', [])
     $rootScope.nombreUser = "";
     $scope.isLogin = false;
     $scope.isAdmin = false;
+    $scope.batallaUidOriginante = "";
+    $scope.batallaUidDesafiado = "";
+    $scope.batallaCreditos = 0;
 
     var navIcons = document.getElementsByClassName('ion-navicon');
     for (var i = 0; i < navIcons.length; i++) {
@@ -105,6 +108,21 @@ angular.module('app.controllers', [])
       $scope.isAdmin = bool;
     }
 
+    $scope.setUidOriginante = function(uid){
+      $scope.batallaUidOriginante = uid;
+      console.log("uid originante: ", $scope.batallaUidOriginante);
+    }
+
+    $scope.setUidDesafiado = function(uid){
+      $scope.batallaUidDesafiado = uid;
+      console.log("uid desafiado: ", $scope.batallaUidDesafiado);
+    }
+
+    $scope.setBatallaCreditos = function(cred){
+      $scope.batallaCreditos = parseInt(cred);
+      console.log("creditos: ", $scope.batallaCreditos);
+    }
+
     /*Fin animacion*/
 
   firebase.auth().onAuthStateChanged(function(user) {
@@ -127,13 +145,19 @@ angular.module('app.controllers', [])
   });
 
   $scope.Desloguear = function(){
-    $rootScope.imgUser = 'img/unknown.jpg';
-    $rootScope.nombreUser = "";
-    User.clean();
-    $scope.setLogin(false);
-    firebase.auth().signOut();
-    $timeout(function(){
-    $scope.habilitado = true;
+    SrvFirebase.RefUsuario(User.getUid()).once('value').then(function (snapshot){
+      snapshot.ref.update({
+        isOnline: false
+      });
+      $rootScope.imgUser = 'img/unknown.jpg';
+      $rootScope.nombreUser = "";
+      User.clean();
+      $scope.setLogin(false);
+      firebase.auth().signOut();
+      $timeout(function(){
+      $scope.habilitado = true;
+      $rootScope.token = "";
+    })
       /*$ionicHistory.nextViewOptions({
           disableBack: true
       });
@@ -141,6 +165,84 @@ angular.module('app.controllers', [])
     })
 
   }
+
+
+  $scope.$on('cloud:push:notification', function(event, data) {
+      var msg = data.message;
+      //console.log(JSON.stringify(data));
+      console.log("data.message: ", JSON.stringify(data.message));
+      if (msg.title == "Desafios") {
+        var alertPopup = $ionicPopup.alert({
+           title: msg.title,
+           template: msg.text
+        });
+      };
+
+      if (msg.title == "Batalla") {
+
+        console.log(data.message.raw.additionalData.notId);
+
+        var time = data.message.raw.additionalData.notId;
+
+        console.log(time); 
+
+        var JSONbid = {};
+        JSONbid = JSON.parse(JSON.stringify(data.message.raw.additionalData.payload)); //Obtengo el bid pasado por paremetro.
+        //console.log("bid: ", bid);
+
+        var timeBatalla = "";
+
+        SrvFirebase.RefBatalla(JSONbid.bid).child('time').once('value').then(function (snap){
+          timeBatalla = snap.val();
+          console.log(timeBatalla);
+
+          if (time == timeBatalla) {
+
+            var confirmPopup = $ionicPopup.confirm({
+              title: msg.title,
+              template: msg.text
+            });
+            var JSONbatalla = {};
+             confirmPopup.then(function(res) {
+               if(res) {
+                 console.log("JSONbid: ", JSONbid);
+                 SrvFirebase.RefBatalla(JSONbid.bid).once('value').then(function (snapshot){
+                    SrvFirebase.GastarCreditos(parseInt(snapshot.val().creditos), snapshot.val().uidOriginante);
+                    SrvFirebase.GastarCreditos(parseInt(snapshot.val().creditos), snapshot.val().uidDesafiado);
+                    snapshot.ref.update({
+                      estado: "Aceptado"
+                    });
+                    JSONbatalla.bid = JSONbid.bid;
+                    JSONbatalla.uidOriginante = snapshot.val().uidOriginante;
+                    JSONbatalla.uidDesafiado = snapshot.val().uidDesafiado;
+                    JSONbatalla.creditos = snapshot.val().creditos;
+                    var bid = JSON.stringify(JSONbatalla);
+                    $state.go("app.batalla", {datosBatalla: bid});
+                 });
+               } else {
+                 console.log('You are not sure');
+               }
+             });
+
+             SrvFirebase.RefBatalla(JSONbid.bid).on('value', function (snapshot){
+                if (snapshot.val().estado == "Abandonado") {
+                  confirmPopup.close();
+                  var alertPopup = $ionicPopup.alert({
+                    title: "Tiempo Agotado",
+                    template: "La batalla fue cancelada por superar el tiempo de espera para su confirmacion"
+                  });
+                };
+             });
+
+
+          };
+
+        });
+
+        
+      };
+      
+  });
 
 
 })

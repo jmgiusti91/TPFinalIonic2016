@@ -126,3 +126,8 @@ p {
 .keyboard-open .button-bar{
  bottom:0;
  }
+
+.btn-batalla{
+    height:100px;
+    width:140px;
+ }

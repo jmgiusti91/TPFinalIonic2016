@@ -78,12 +78,15 @@ angular.module('app.services', [])
 
 	this.RefUsuarios = RefUsuarios;
 	this.RefDesafios = RefDesafios;
+	this.RefBatallas = RefBatallas;
 	this.RefUsuario = RefUsuario;
 	this.RefDesafio = RefDesafio;
+	this.RefBatalla = RefBatalla;
 	this.RefStorage = firebase.storage().ref();
 	this.GastarCreditos = GastarCreditos;
 	this.GanarCreditos = GanarCreditos;
 	this.EnviarNotificacion = EnviarNotificacion;
+	this.EnviarNotificacionBatalla = EnviarNotificacionBatalla;
 
 	function ObtenerReferencia(coleccion){
 		return firebase.database().ref(coleccion);
@@ -97,12 +100,20 @@ angular.module('app.services', [])
 		return ObtenerReferencia('desafios/');
 	}
 
+	function RefBatallas(){
+		return ObtenerReferencia('batallas/');
+	}
+
 	function RefUsuario(uid){
 		return ObtenerReferencia('usuarios/' + uid);
 	}
 
 	function RefDesafio(did){
 		return ObtenerReferencia('desafios/' + did);
+	}
+
+	function RefBatalla(bid){
+		return ObtenerReferencia('batallas/' + bid);
 	}
 
 	function GastarCreditos(cred, uid){
@@ -128,18 +139,18 @@ angular.module('app.services', [])
 		})
 	}
 
-	function EnviarNotificacion(){ //en ionic push param token.
+	function EnviarNotificacion(token){ //en ionic push param token.
 		//var jwt = 'AIzaSyBFmmOVoNG7jeMdaxG0_8UGz1UEvhpAOBg';
-		/*var req = {
+		var req = {
 		  method: 'POST',
 		  url: 'https://api.ionic.io/push/notifications',
 		  headers: {
 		    'Content-Type': 'application/json',
-		    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkYjQ1ZjdlYy01NjgxLTRjY2UtOWU2MC0xNjFmMDJiN2NhZjUifQ.NR6A6lhpv6poyn4pgeAJveU7GogtoLUGTUn6FFdTmeQ'
+		    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlZGQzYTNiZi1hODI2LTRjMDMtOWFlMC03NGJjMmNjYzNjMmMifQ._jbLGKWgwvHBFcfgNUfCAu-qMw_2CnjQ5HhSKs9ozxw'
 		  },
 		  data: {
 		  	"tokens": token,
-		  	"profile": "srvnotificacion",
+		  	"profile": "desafios",
 		    "notification": {
 		      "title": "Desafios",
 		      "message": "Los desafios han sido actualizados. Ven a ver cuanto has ganado.",
@@ -161,34 +172,54 @@ angular.module('app.services', [])
 		}).error(function(error){
 		  // Handle error 
 		  console.log("Ionic Push: Push error: ", error);
-		});*/
+		});
+	}
 
+	function EnviarNotificacionBatalla(token, nomDesafiante, cred, bid, time){ //en ionic push param token.
+		//var jwt = 'AIzaSyBFmmOVoNG7jeMdaxG0_8UGz1UEvhpAOBg';
+		console.log("bid en EnviarNotificacionBatalla: ", bid);
+		console.log(time);
+		var req = {
+		  method: 'POST',
+		  url: 'https://api.ionic.io/push/notifications',
+		  headers: {
+		    'Content-Type': 'application/json',
+		    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhYzNlOWFhMC0xYTZmLTQ0YjUtOTZmYS0wOWNlNDkzOTU3OTAifQ.aQStnngDHAAzupti0bWwDRaeS9EEUVDIchEgAPgb0bE'
+		  },
+		  data: {
+		  	"tokens": token,
+		  	"profile": "batallanaval",
+		    "notification": {
+		      "title": "Batalla",
+		      "message": "" + nomDesafiante + " te ha desafiado a una batalla naval por " + cred + " creditos. Aceptas?",
+		      "android": {
+		        "title": "Batalla",
+		        "message": "" + nomDesafiante + " te ha desafiado a una batalla naval por " + cred + " creditos. Aceptas?",
+		        "payload":{
+		        	"bid": bid
+		        },
+		        "data":{
+		        	"notId": "" + time
+		        }
+		      },
+		      "ios": {
+		        "title": "Batalla",
+		        "message": "" + nomDesafiante + " te ha desafiado a una batalla naval por " + cred + " creditos. Aceptas?",
+		       	"payload":{
+		       		"bid": bid
+		       	}	
+		      }
+		    }
+		  }
+		};
 
-		/*var http = new XMLHttpRequest();
-    	var url =  'https://fcm.googleapis.com/fcm/send';
-		
-		var params = JSON.stringify({
-				    "to":"/topics/all", //Topic or single device
-				"notification":{
-				    "title":"Desafios",  //Any value
-				    "body":"Los desafios han sido actualizados. Ven a ver cuanto has ganado.",  //Any value
-				    "sound":"default", //If you want notification sound
-				    "click_action":"FCM_PLUGIN_ACTIVITY",  //Must be present for Android
-				    "icon":"fcm_push_icon"  //White icon Android resource
-				  },
-				    "priority":"high" //If not set, notification won't be delivered on completely closed iOS app
-			});
-
-		http.open("POST", url, true);
-	    http.setRequestHeader("Content-type", "application/json");
-	    http.setRequestHeader('Authorization', 'key=AIzaSyBFmmOVoNG7jeMdaxG0_8UGz1UEvhpAOBg');
-
-	    http.onreadystatechange = function() {
-	        if(http.readyState == 4 && http.status == 200) {
-	            console.log(http.responseText);
-	        }
-	    }
-	    http.send(params);*/
+		$http(req).success(function(resp){
+		  // Handle success
+		  console.log("Ionic Push: Push success: ", resp);
+		}).error(function(error){
+		  // Handle error 
+		  console.log("Ionic Push: Push error: ", error);
+		});
 	}
 
 }])

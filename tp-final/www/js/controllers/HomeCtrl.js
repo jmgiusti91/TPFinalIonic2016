@@ -36,21 +36,15 @@ angular.module('app.controllers')
   /*FIN ANIMACION*/
 
   $scope.$on('$ionicView.enter', function(e) {
-
     $scope.usuario.fotoPortada = User.getFotoPortada();
     $scope.usuario.fotoPerfil = User.getFoto();
     
   });
 
   $scope.PushNotification = function(){
-    console.log($rootScope.token);
-    SrvFirebase.EnviarNotificacion(); //En ionic push param $rootScope.token
-    alert("Notificacion Enviada");
+    SrvFirebase.RefUsuarios().on('child_added', function (snapshot){
+      SrvFirebase.EnviarNotificacion(snapshot.val().pushToken);
+    })
   }
-
-  /*$scope.$on('cloud:push:notification', function(event, data) {
-      var msg = data.message;
-      alert(msg.title + ': ' + msg.text);
-   });*/
 
 })

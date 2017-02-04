@@ -167,6 +167,63 @@ angular.module('app', ['ionic', 'ionic.cloud', 'app.controllers', 'ngCordova', '
     }
   })
 
+  .state('app.nva-batalla', {
+    url: '/nuevaBatalla',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/nueva-batalla.html',
+        controller: 'NuevaBatallaCtrl'
+      },
+      'fabContent': {
+                template: '<button id="nva-batalla-help" class="button button-fab button-fab-top-right expanded button-energized-900 flap" ng-click="NuevaBatallaHelp()"><i class="icon ion-help"></i></button>',
+                controller: function ($timeout, $state, $scope, $ionicPopover) {
+                    $timeout(function () {
+                        document.getElementById('nva-batalla-help').classList.toggle('on');
+                        $scope.NuevaBatallaHelp = function(){
+                          var template =  '<ion-popover-view style="margin-top:60px">' +
+                                          '   <ion-header-bar>' +
+                                          '       <h1 class="title" style="color:#000">Ayuda</h1>' +
+                                          '   </ion-header-bar>' +
+                                          '   <ion-content class="padding">' +
+                                          '       Creditos: Aqui debe especificar la cantidad de creditos que apostara.<br>' +
+                                          '       Combo Box: Aqui debe elegir a su oponente. Solo Aparecen los usuarios online.<br> ' +
+                                          '       Nota: Los creditos le seran descontados una vez generada la batalla. Si' +
+                                          '       gana se le devolvera el doble y si pierde no habra cambios.' + 
+                                          '<button class="button button-block button-assertive btn-log-off" ng-click="Cerrar()">Cerrar</button>' + 
+                                          '   </ion-content>' +
+                                          '</ion-popover-view>';
+                          $scope.popover = $ionicPopover.fromTemplate(template, {
+                              scope: $scope
+                          });
+                          $scope.popover.show();
+                        }
+                        $scope.Cerrar = function(){
+                          $scope.popover.hide();
+                        }
+                        $scope.$on('$destroy', function() {
+                            //$scope.popover.remove();
+                        });
+                    }, 200);
+                }
+        }
+    }
+  })
+
+
+  .state('app.batalla', {
+    url: '/nuevaBatalla/batalla/:datosBatalla',
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/batalla.html',
+        controller: 'BatallaCtrl'
+      }, 
+      'fabContent': {
+              template: ''
+        }
+    }
+  })
+
   .state('app.home', {
       url: '/home',
       views: {

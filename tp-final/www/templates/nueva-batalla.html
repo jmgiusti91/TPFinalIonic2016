@@ -1,0 +1,20 @@
+<ion-view view-title="Nueva Batalla Naval">
+  <ion-content style="background-color:#DDD">
+    <h3 style="color:#333">Nueva Batalla Naval</h3>
+    <div class="list">
+     <label class="item item-input item-floating-label">
+        <span class="input-label">Creditos</span>
+        <input type="number" placeholder="Creditos" ng-model="batalla.creditos">
+     </label>
+     <label class="item item-input item-floating-label">
+        <select name="oponente" id="oponente" ng-model="batalla.oponente.uid" ng-init="batalla.oponente.uid">
+            <option ng-repeat="o in listadoOponentes" value="{{o.uid}}">{{o.nombre}}&nbsp;-&nbsp;{{o.email}}</option>
+        </select>
+     </label> 
+     <button class="button button-block button-balanced" ng-click="GenerarBatalla()" ng-disabled="!batalla.creditos || !batalla.oponente">Generar Batalla</button>
+    </div>
+                
+
+    
+  </ion-content>
+</ion-view>

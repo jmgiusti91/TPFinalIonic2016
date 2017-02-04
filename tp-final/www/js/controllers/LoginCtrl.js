@@ -1,6 +1,6 @@
 angular.module('app.controllers')
 
-.controller('LoginCtrl', function($scope, $ionicHistory, $ionicPush, $state, $timeout, $ionicSideMenuDelegate, $location, User, SrvFirebase, $rootScope){
+.controller('LoginCtrl', function($scope, $ionicHistory, $ionicPlatform, $ionicPush, $state, $timeout, $ionicSideMenuDelegate, $location, User, SrvFirebase, $rootScope){
 
   // hide-nav-bar="true"
 
@@ -12,6 +12,20 @@ angular.module('app.controllers')
 
   $scope.$on('$ionicView.enter', function(e) {
     $scope.habilitado = true;
+
+    if (window.cordova) {
+      var options = {
+        ignore_user: true
+      }
+      $ionicPush.register().then(function(t) {
+        return $ionicPush.saveToken(t, options);
+      }).then(function(t) {
+        console.log('Token saved:', t.token);
+        $rootScope.token = t.token;
+      });
+    } else {
+      $rootScope.token = "";
+    }
   });
 
   $scope.Loguear = function(){
@@ -49,7 +63,23 @@ angular.module('app.controllers')
               $rootScope.token = t.token;
             });*/
 
+            /*if (window.cordova) {
+              var options = {
+                ignore_user: true
+              }
+              $ionicPush.register().then(function(t) {
+                return $ionicPush.saveToken(t, options);
+              }).then(function(t) {
+                console.log('Token saved:', t.token);
+                $rootScope.token = t.token;
+              });
+            } else {
+              $rootScope.token = "";
+            }*/
+
             SrvFirebase.RefUsuario(userId).once('value').then(function(snapshot) {
+
+
               console.log(snapshot.val());
               User.login(snapshot.val().uid, snapshot.val().email, snapshot.val().creditos, snapshot.val().foto, snapshot.val().fotoPortada, snapshot.val().nombre, snapshot.val().soyAdmin);
               console.log(User.getFullData());
@@ -57,6 +87,11 @@ angular.module('app.controllers')
               $rootScope.nombreUser = User.getNombre();
               $scope.$parent.setLogin(true);
               $scope.$parent.setAdmin(User.isAdmin());
+              snapshot.ref.update({
+                pushToken: $rootScope.token,
+                isOnline: true,
+                enBatalla: false
+              })
               //console.info("User.isAdmin ", User.isAdmin());
               //console.log($scope.$parent.isAdmin);
               $state.go('app.home');

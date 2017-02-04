@@ -1,0 +1,33 @@
+<ion-view view-title="Batalla Naval">
+  <ion-content>
+	<div ng-if="!comenzo">
+		<h2 style="text-align:center;">Elige la posicion de tu barco.</h2>
+		<div style="display:table;margin:0 auto;">
+			<button class="button button-positive btn-batalla" ng-click="ElegirPosicion('UNO')">1</button>
+			<button class="button button-positive btn-batalla" ng-click="ElegirPosicion('DOS')">2</button><br>
+			<button class="button button-positive btn-batalla" ng-click="ElegirPosicion('TRES')">3</button>
+			<button class="button button-positive btn-batalla" ng-click="ElegirPosicion('CUATRO')">4</button><br>
+			<button class="button button-positive btn-batalla" ng-click="ElegirPosicion('CINCO')">5</button>
+			<button class="button button-positive btn-batalla" ng-click="ElegirPosicion('SEIS')">6</button><br>
+			<button class="button button-positive btn-batalla" ng-click="ElegirPosicion('SIETE')">7</button>
+			<button class="button button-positive btn-batalla" ng-click="ElegirPosicion('OCHO')">8</button>
+		</div>
+	</div>
+	
+	<div ng-if="comenzo">
+		<h2 style="text-align:center;" ng-if="turno">Elige la posicion que desees atacar.</h2>
+		<h2 style="text-align:center;" ng-if="!turno">Turno del rival. Aguarda...</h2>
+		<div style="display:table;margin:0 auto;">
+			<button class="button button-assertive btn-batalla" ng-click="ElegirAtaque('UNO')" ng-if="turno">1</button>
+			<button class="button button-assertive btn-batalla" ng-click="ElegirAtaque('DOS')" ng-if="turno">2</button><br>
+			<button class="button button-assertive btn-batalla" ng-click="ElegirAtaque('TRES')" ng-if="turno">3</button>
+			<button class="button button-assertive btn-batalla" ng-click="ElegirAtaque('CUATRO')" ng-if="turno">4</button><br>
+			<button class="button button-assertive btn-batalla" ng-click="ElegirAtaque('CINCO')" ng-if="turno">5</button>
+			<button class="button button-assertive btn-batalla" ng-click="ElegirAtaque('SEIS')" ng-if="turno">6</button><br>
+			<button class="button button-assertive btn-batalla" ng-click="ElegirAtaque('SIETE')" ng-if="turno">7</button>
+			<button class="button button-assertive btn-batalla" ng-click="ElegirAtaque('OCHO')" ng-if="turno">8</button>
+		</div>
+	</div>
+	
+  </ion-content>
+</ion-view>
