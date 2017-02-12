@@ -169,6 +169,7 @@ angular.module('app', ['ionic', 'ionic.cloud', 'app.controllers', 'ngCordova', '
 
   .state('app.nva-batalla', {
     url: '/nuevaBatalla',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/nueva-batalla.html',
@@ -226,6 +227,7 @@ angular.module('app', ['ionic', 'ionic.cloud', 'app.controllers', 'ngCordova', '
 
   .state('app.home', {
       url: '/home',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: 'templates/home.html',

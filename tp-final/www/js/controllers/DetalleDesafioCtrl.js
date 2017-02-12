@@ -73,13 +73,31 @@ angular.module('app.controllers')
   $scope.GanaOriginante = function(){
 
     $scope.desafio.instancia = "Finalizado";
+    $scope.desafio.ganador = $scope.desafio.uid;
+    $scope.desafio.perdedor = $scope.desafio.uidDesafiante;
+    $scope.desafio.mensaje = "Has Ganado";
 
     var updates = {
-        instancia: $scope.desafio.instancia
+        instancia: $scope.desafio.instancia,
+        ganador:   $scope.desafio.ganador,
+        perdedor:  $scope.desafio.perdedor
     };
 
     SrvFirebase.RefDesafio($scope.desafio.did).update(updates);
 
+    var actualizGanador = {
+        historial: $scope.desafio
+    };
+
+    SrvFirebase.RefUsuario($scope.desafio.uid).update(actualizGanador);
+
+    $scope.desafio.mensaje = "Has perdido";
+
+    var actualizPerdedor = {
+        historial: $scope.desafio
+    };
+    
+    SrvFirebase.RefUsuario($scope.desafio.uidDesafiante).update(actualizPerdedor);
 
     SrvFirebase.GanarCreditos(parseInt(parseInt($scope.desafio.creditos) * 2), $scope.desafio.uid);
 
@@ -89,12 +107,31 @@ angular.module('app.controllers')
 
   $scope.GanaDesafiante = function(){
     $scope.desafio.instancia = "Finalizado";
+    $scope.desafio.ganador = $scope.desafio.uidDesafiante;
+    $scope.desafio.perdedor = $scope.desafio.uid;
+    $scope.desafio.mensaje = "Has Ganado";
 
     var updates = {
-        instancia: $scope.desafio.instancia
+        instancia: $scope.desafio.instancia,
+        ganador: $scope.desafio.ganador,
+        perdedor: $scope.desafio.perdedor
     };
 
     SrvFirebase.RefDesafio($scope.desafio.did).update(updates);
+
+    var actualizGanador = {
+        historial: $scope.desafio
+    };
+
+    SrvFirebase.RefUsuario($scope.desafio.uidDesafiante).update(actualizGanador);
+
+    $scope.desafio.mensaje = "Has Perdido";
+
+    var actualizPerdedor = {
+        historial: $scope.desafio
+    };
+
+    SrvFirebase.RefUsuario($scope.desafio.uid).update(actualizPerdedor);
 
     SrvFirebase.GanarCreditos(parseInt(parseInt($scope.desafio.creditos) * 2), $scope.desafio.uidDesafiante);
   

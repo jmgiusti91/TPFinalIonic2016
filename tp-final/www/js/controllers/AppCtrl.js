@@ -1,6 +1,6 @@
 angular.module('app.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, SrvFirebase, $ionicPopover, $ionicPopup, $ionicPush, $timeout, $state, $ionicHistory, $rootScope, User) {
+.controller('AppCtrl', function($scope, $ionicModal, SrvFirebase, $ionicPopover, $ionicPopup, $ionicPush, $timeout, $state, $ionicHistory, $rootScope, User, $ionicNavBarDelegate) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -205,7 +205,7 @@ angular.module('app.controllers', [])
             var JSONbatalla = {};
              confirmPopup.then(function(res) {
                if(res) {
-                 console.log("JSONbid: ", JSONbid);
+                 console.info("JSONbid.bid: ", JSONbid.bid);
                  SrvFirebase.RefBatalla(JSONbid.bid).once('value').then(function (snapshot){
                     SrvFirebase.GastarCreditos(parseInt(snapshot.val().creditos), snapshot.val().uidOriginante);
                     SrvFirebase.GastarCreditos(parseInt(snapshot.val().creditos), snapshot.val().uidDesafiado);
@@ -220,9 +220,17 @@ angular.module('app.controllers', [])
                     $state.go("app.batalla", {datosBatalla: bid});
                  });
                } else {
-                 console.log('You are not sure');
-               }
-             });
+                 //console.log('You are not sure');
+                 SrvFirebase.RefBatalla(JSONbid.bid).once('value').then(function (snapshot){
+                    snapshot.ref.update({
+                      estado: "Rechazado"
+                    });
+                    SrvFirebase.RefUsuario(snapshot.val().uidOriginante).once('value').then(function (snap){
+                      SrvFirebase.NotificacionRechazada(snap.val().pushToken);
+                    });
+                 }); //Fin SrvFirebase.RefBatalla
+               }//Fin else
+             });//Fin confirmPopup.then
 
              SrvFirebase.RefBatalla(JSONbid.bid).on('value', function (snapshot){
                 if (snapshot.val().estado == "Abandonado") {
@@ -230,19 +238,33 @@ angular.module('app.controllers', [])
                   var alertPopup = $ionicPopup.alert({
                     title: "Tiempo Agotado",
                     template: "La batalla fue cancelada por superar el tiempo de espera para su confirmacion"
-                  });
-                };
-             });
+                  }); //Fin alertPopup
+                }; //Fin if
+             }); //Fin SrvFirebase.RefBatalla
 
+          }; //Fin if(time == timeBatalla)
 
-          };
+        }); //Fin SrvFirebase.RefBatalla(JSONbid.bid).child('time')
+        
+      }; //Fin if (msg.title == "Batalla")
 
+      if (msg.title == "Rechazada") {
+        var alertPopup = $ionicPopup.alert({
+           title: msg.title,
+           template: msg.text
         });
 
-        
-      };
-      
-  });
+        alertPopup.then(function (res){
+          $ionicNavBarDelegate.showBackButton(true);
+          $ionicHistory.clearCache();
+          $ionicHistory.clearHistory();
+          $ionicHistory.nextViewOptions({
+              disableBack: true
+          });
+          $state.go('app.home');
+        });
+      }; //FIN if (msg.title == "Rechazada")
 
+  }); //Fin $scope.$on('cloud:push:notification'
 
-})
+}) //Fin controller

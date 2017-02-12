@@ -89,8 +89,7 @@ angular.module('app.controllers')
               $scope.$parent.setAdmin(User.isAdmin());
               snapshot.ref.update({
                 pushToken: $rootScope.token,
-                isOnline: true,
-                enBatalla: false
+                isOnline: true
               })
               //console.info("User.isAdmin ", User.isAdmin());
               //console.log($scope.$parent.isAdmin);

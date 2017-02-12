@@ -20,9 +20,9 @@ angular.module('app.controllers')
 
     SrvFirebase.RefBatalla(datosBatalla.bid).on('value', function (snapshot){
 
-            console.log("Escucho la batalla");
+            console.info("BatallaCtrl: ", datosBatalla.bid);
 
-            console.log(snapshot.val());
+            console.info("BatallaCtrl: ", snapshot.val());
 
             if (snapshot.val().estado == "Finalizado") {
                 var alertPopup;
@@ -36,7 +36,7 @@ angular.module('app.controllers')
                         alertPopup = $ionicPopup.alert({
                             title: "Maldicion!",
                             template: "Han hundido tu barco."
-                        })
+                        });
                     }
                 };
 
@@ -50,11 +50,15 @@ angular.module('app.controllers')
                         alertPopup = $ionicPopup.alert({
                             title: "Maldicion!",
                             template: "Han hundido tu barco."
-                        })
+                        });
                     }
                 };
 
                 alertPopup.then(function (res){
+                    if (alertPopup) {
+                        alertPopup.close();
+                        console.info("BatallaCtrl - Cierro Alert: ", datosBatalla.bid);
+                    };
                     $ionicNavBarDelegate.showBackButton(true);
                     $ionicHistory.clearCache();
                     $ionicHistory.clearHistory();
@@ -124,11 +128,11 @@ angular.module('app.controllers')
                 if (User.getUid() == datosBatalla.uidDesafiado) {
                     $timeout(function (){
                         $scope.turno = false;
-                    })
+                    });
                 };
             };
 
-        })
+        }); //FIN SrvFirebase.RefBatalla(datosBatalla.bid).on('value'
 
     $scope.$on('$ionicView.enter', function(e) {   
     	

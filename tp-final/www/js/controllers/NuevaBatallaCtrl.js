@@ -66,20 +66,30 @@ angular.module('app.controllers')
     	});
 
     	SrvFirebase.RefBatallas().limitToLast(1).on('child_added', function (data){
-    		data.ref.update({
-    			bid: data.key
-    		})
-    		var JSONbatalla = {};
-    		JSONbatalla.bid = data.key;
-            JSONbatalla.uidOriginante = User.getUid();
-            JSONbatalla.uidDesafiado = $scope.batalla.oponente.uid;
-            JSONbatalla.creditos = $scope.batalla.creditos;
-    		var bid = JSON.stringify(JSONbatalla);
-            console.log(fechaTime);
-    		SrvFirebase.RefUsuario($scope.batalla.oponente.uid).once('value').then(function (snapshot){
-    			SrvFirebase.EnviarNotificacionBatalla(snapshot.val().pushToken, User.getNombre(), $scope.batalla.creditos, data.key, fechaTime);
-    			$state.go("app.batalla", {datosBatalla: bid});
-    		});
+
+            if ($scope.batalla.oponente.uid != "") {
+
+                data.ref.update({
+                    bid: data.key
+                });
+                var JSONbatalla = {};
+                JSONbatalla.bid = data.key;
+                JSONbatalla.uidOriginante = User.getUid();
+                JSONbatalla.uidDesafiado = $scope.batalla.oponente.uid;
+                JSONbatalla.creditos = $scope.batalla.creditos;
+                var bid = JSON.stringify(JSONbatalla);
+                //console.info("NuevaBatallaCtrl: ", data.key);
+                //console.info("scope.batalla: ", $scope.batalla);
+                //console.info("User.getUid: ", User.getUid());
+                SrvFirebase.RefUsuario($scope.batalla.oponente.uid).once('value').then(function (snapshot){
+                    SrvFirebase.EnviarNotificacionBatalla(snapshot.val().pushToken, User.getNombre(), $scope.batalla.creditos, data.key, fechaTime);
+                    $scope.batalla.oponente.uid = "";
+                    $scope.batalla.creditos = 0;
+                    $state.go("app.batalla", {datosBatalla: bid});
+                });
+
+            };
+    		
     	});
     	
 	}

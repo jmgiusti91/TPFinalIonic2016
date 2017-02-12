@@ -36,9 +36,15 @@ angular.module('app.controllers')
   /*FIN ANIMACION*/
 
   $scope.$on('$ionicView.enter', function(e) {
+    console.info("Estoy en home");
     $scope.usuario.fotoPortada = User.getFotoPortada();
     $scope.usuario.fotoPerfil = User.getFoto();
+    $scope.historial = {};
     
+    SrvFirebase.RefUsuario(User.getUid()).child('historial').once('value').then(function (snapshot){
+        $scope.historial = snapshot.val();
+    });
+
   });
 
   $scope.PushNotification = function(){

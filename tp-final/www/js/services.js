@@ -87,6 +87,7 @@ angular.module('app.services', [])
 	this.GanarCreditos = GanarCreditos;
 	this.EnviarNotificacion = EnviarNotificacion;
 	this.EnviarNotificacionBatalla = EnviarNotificacionBatalla;
+	this.NotificacionRechazada = NotificacionRechazada;
 
 	function ObtenerReferencia(coleccion){
 		return firebase.database().ref(coleccion);
@@ -208,6 +209,41 @@ angular.module('app.services', [])
 		       	"payload":{
 		       		"bid": bid
 		       	}	
+		      }
+		    }
+		  }
+		};
+
+		$http(req).success(function(resp){
+		  // Handle success
+		  console.log("Ionic Push: Push success: ", resp);
+		}).error(function(error){
+		  // Handle error 
+		  console.log("Ionic Push: Push error: ", error);
+		});
+	}
+
+	function NotificacionRechazada(token){
+		var req = {
+		  method: 'POST',
+		  url: 'https://api.ionic.io/push/notifications',
+		  headers: {
+		    'Content-Type': 'application/json',
+		    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhYzNlOWFhMC0xYTZmLTQ0YjUtOTZmYS0wOWNlNDkzOTU3OTAifQ.aQStnngDHAAzupti0bWwDRaeS9EEUVDIchEgAPgb0bE'
+		  },
+		  data: {
+		  	"tokens": token,
+		  	"profile": "batallanaval",
+		    "notification": {
+		      "title": "Rechazada",
+		      "message": "Tu solicitud de batalla fue rechazada.",
+		      "android": {
+		        "title": "Rechazada",
+		        "message": "Tu solicitud de batalla fue rechazada."
+		      },
+		      "ios": {
+		        "title": "Rechazada",
+		        "message": "Tu solicitud de batalla fue rechazada."	
 		      }
 		    }
 		  }

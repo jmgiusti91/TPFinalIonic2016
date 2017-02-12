@@ -8,6 +8,7 @@ angular.module('app.controllers')
     $scope.usuario.fotoPerfil = User.getFoto();
     $scope.usuario.nombre = User.getNombre();
     $scope.usuario.email = User.getEmail();
+    $scope.creditos;
 
 	$scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -68,6 +69,14 @@ angular.module('app.controllers')
 	 } catch(error){
 	 	console.log(error);
 	 }
+
+	 $scope.$on('$ionicView.enter', function(e) {
+
+	 	SrvFirebase.RefUsuario(User.getUid()).child('creditos').once('value').then(function (snapshot){
+	 		$scope.creditos = snapshot.val();
+	 	});
+
+	 });
 
 	 
 
@@ -196,7 +205,7 @@ angular.module('app.controllers')
 
 
 			}, function(err) {
-				alert("error getpicture: " + err.message);
+				//alert("error getpicture: " + err.message);
 			    //callback(null);
 			});
 

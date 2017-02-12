@@ -8,19 +8,24 @@
             </div>
         </div>
         <div class="tabs tabs-dark tabs-icon-top static">
-            <a ui-sref="#" class="tab-item">
-                <i class="icon ion-arrow-graph-up-right"></i> Activity
+            <a ui-sref="app.nva-batalla" class="tab-item">
+                <i class="icon ion-android-boat"></i> Batalla Naval
             </a>
-            <a ui-sref="#" class="tab-item">
-                <i class="icon ion-android-people"></i> Friends
+            <a ui-sref="app.desafios" class="tab-item">
+                <i class="icon ion-trophy"></i> Desafios
             </a>
-            <a ui-sref="#" class="tab-item">
-                <i class="icon ion-images"></i> Photos
+            <a ui-sref="app.perfil" class="tab-item">
+                <i class="icon ion-images"></i> Perfil
             </a>
         </div>
-        <h4 class="content padding double-padding-x" ng-hide="admin">Following</h4>
+        <h4 class="content padding double-padding-x" ng-hide="admin">Ultimo Desafio</h4>
         <div class="list animate-fade-slide-in-right" ng-hide="admin">
             <a ui-sref="#" class="item item-avatar item-icon-right">
+                <h2>{{historial.mensaje}}</h2>
+                <p>Creditos apostados: {{historial.creditos}}</p>
+                <i class="icon ion-ios-paper-outline"></i>
+            </a>
+            <!--<a ui-sref="#" class="item item-avatar item-icon-right">
                 <h2>Jon Snow</h2>
                 <p>Da illest illegitimate</p>
                 <i class="icon ion-chatbubble muted"></i>
@@ -34,7 +39,7 @@
                 <h2>Tyrion Lannister</h2>
                 <p>B.A.M.F. imp</p>
                 <i class="icon ion-chatbubble muted"></i>
-            </a>
+            </a>-->
         </div>
         <h4 class="content padding double-padding-x" ng-show="admin">Notificar Desafios Actualizados</h4>
         <div class="list animate-fade-slide-in-right" ng-show="admin">
